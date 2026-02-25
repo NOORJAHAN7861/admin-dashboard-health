@@ -5,13 +5,14 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { api } from "./utils/api";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
+
 import AddNewDoctor from "./components/AddNewDoctor";
 import Messages from "./components/Messages";
 import Doctors from "./components/Doctors";
 import { Context } from "./main";
-import axios from "axios";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Sidebar from "./components/Sidebar";

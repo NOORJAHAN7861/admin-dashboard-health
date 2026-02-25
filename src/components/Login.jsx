@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Context } from "../main";
-import axios from "axios";
+import { api } from "../utils/api";
 
 const Login = () => {
   const [email, setEmail] = useState("");

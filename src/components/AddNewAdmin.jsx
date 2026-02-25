@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Context } from "../main";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
+import { api } from "../utils/api";
 
 const AddNewAdmin = () => {
   const { isAuthenticated, setIsAuthenticated } = useContext(Context);
@@ -20,31 +20,28 @@ const AddNewAdmin = () => {
 
   const handleAddNewAdmin = async (e) => {
     e.preventDefault();
-    try {
-     await axios.post(
-  `${import.meta.env.VITE_API_URL}/api/v1/user/admin/addnew`,
-  { firstName, lastName, email, phone, nic, dob, gender, password },
-  {
-    withCredentials: true,
-    headers: { "Content-Type": "application/json" },
-  }
-)
-        .then((res) => {
-          toast.success(res.data.message);
-          setIsAuthenticated(true);
-          navigateTo("/");
-          setFirstName("");
-          setLastName("");
-          setEmail("");
-          setPhone("");
-          setNic("");
-          setDob("");
-          setGender("");
-          setPassword("");
-        });
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
+  try {
+  const res = await api.post(
+    "/api/v1/user/admin/addnew",
+    { firstName, lastName, email, phone, nic, dob, gender, password }
+  );
+
+  toast.success(res.data.message);
+  setIsAuthenticated(true);
+  navigateTo("/");
+
+  setFirstName("");
+  setLastName("");
+  setEmail("");
+  setPhone("");
+  setNic("");
+  setDob("");
+  setGender("");
+  setPassword("");
+
+} catch (error) {
+  toast.error(error?.response?.data?.message || "Something went wrong");
+}
   };
 
   if (!isAuthenticated) {
@@ -120,5 +117,4 @@ const AddNewAdmin = () => {
     </section>
   );
 };
-
 export default AddNewAdmin;

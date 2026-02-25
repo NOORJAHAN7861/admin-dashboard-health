@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Context } from "../main";
-import axios from "axios";
+import { api } from "../utils/api";
 
 const AddNewDoctor = () => {
   const { isAuthenticated, setIsAuthenticated } = useContext(Context);
@@ -45,7 +45,6 @@ const AddNewDoctor = () => {
 
   const handleAddNewDoctor = async (e) => {
     e.preventDefault();
-    try {
       const formData = new FormData();
       formData.append("firstName", firstName);
       formData.append("lastName", lastName);
@@ -81,6 +80,7 @@ try {
 } catch (error) {
   toast.error(error.response?.data?.message || "Something went wrong");
 }
+  }
 
   if (!isAuthenticated) {
     return <Navigate to={"/login"} />;

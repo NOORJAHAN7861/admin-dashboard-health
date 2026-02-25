@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../main";
 import { Navigate } from "react-router-dom";
-import axios from "axios";
+import { api } from "../utils/api";
 import { toast } from "react-toastify";
 import { GoCheckCircleFill } from "react-icons/go";
 import { AiFillCloseCircle } from "react-icons/ai";
@@ -41,6 +41,7 @@ useEffect(() => {
 } catch (error) {
   toast.error(error.response?.data?.message || "Something went wrong");
 }
+  };
 
   const { isAuthenticated, admin } = useContext(Context);
   if (!isAuthenticated) {

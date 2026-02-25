@@ -1,8 +1,8 @@
-import axios from "axios";
+import {api} from "../utils/api";
+import { Context } from "../main";
+import { Navigate } from "react-router-dom";  
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Context } from "../main";
-import { Navigate } from "react-router-dom";
 
 const Doctors = () => {
   const [doctors, setDoctors] = useState([]);

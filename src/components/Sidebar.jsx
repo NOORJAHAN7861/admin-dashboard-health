@@ -6,7 +6,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { FaUserDoctor } from "react-icons/fa6";
 import { MdAddModerator } from "react-icons/md";
 import { IoPersonAddSharp } from "react-icons/io5";
-import axios from "axios";
+import { api } from "../utils/api";
 import { toast } from "react-toastify";
 import { Context } from "../main";
 import { useNavigate } from "react-router-dom";
