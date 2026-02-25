@@ -167,7 +167,7 @@ try {
                   );
                 })}
               </select>
-              <button type="submit">Register New Doctor</button>
+              <button type="submit" onSubmit={handleAddNewDoctor}>Register New Doctor</button>
             </div>
           </div>
         </form>

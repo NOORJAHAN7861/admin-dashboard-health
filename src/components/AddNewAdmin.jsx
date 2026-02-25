@@ -110,7 +110,7 @@ const AddNewAdmin = () => {
             />
           </div>
           <div style={{ justifyContent: "center", alignItems: "center" }}>
-            <button type="submit">ADD NEW ADMIN</button>
+            <button type="submit" onSubmit={handleAddNewAdmin}>ADD NEW ADMIN</button>
           </div>
         </form>
       </section>

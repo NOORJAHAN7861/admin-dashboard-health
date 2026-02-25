@@ -63,9 +63,9 @@ useEffect(() => {
                 </h5>
               </div>
               <p>
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Facilis, nam molestias. Eaque molestiae ipsam commodi neque.
-                Assumenda repellendus necessitatibus itaque.
+                Welcome to your dashboard! Here you can manage appointments,
+                view patient messages, and oversee doctor registrations. Stay
+                organized and efficient with our user-friendly interface.
               </p>
             </div>
           </div>

@@ -50,8 +50,7 @@ const Login = () => {
   return (
     <>
       <section className="container form-component">
-        <img src="/logo.png" alt="logo" className="logo" />
-        <h1 className="form-title">WELCOME TO ZEECARE</h1>
+        <h1 className="form-title">WELCOME TO NOOR HOSPITAL</h1>
         <p>Only Admins Are Allowed To Access These Resources!</p>
         <form onSubmit={handleLogin}>
           <input
@@ -73,7 +72,7 @@ const Login = () => {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
           <div style={{ justifyContent: "center", alignItems: "center" }}>
-            <button type="submit">Login</button>
+            <button type="submit" onsubmit = {handleLogin}>Login</button>
           </div>
         </form>
       </section>
