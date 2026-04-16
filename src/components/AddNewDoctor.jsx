@@ -57,13 +57,9 @@ const AddNewDoctor = () => {
     formData.append("docAvatar", docAvatar);
 
     try {
-      const res = await api.post(
-        "/api/v1/user/doctor/addnew",
-        formData,
-        {
-          withCredentials: true, // ✅ IMPORTANT
-        }
-      );
+      const res = await api.post("/api/v1/user/doctor/addnew", formData, {
+        withCredentials: true,
+      });
 
       toast.success(res.data.message);
       setIsAuthenticated(true);
@@ -81,7 +77,6 @@ const AddNewDoctor = () => {
       setDoctorDepartment("");
       setDocAvatar(null);
       setDocAvatarPreview("");
-
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
     }
@@ -99,78 +94,76 @@ const AddNewDoctor = () => {
 
         <form onSubmit={handleAddNewDoctor}>
           <div className="first-wrapper">
-            <div>
-              <img
-                src={docAvatarPreview || "/docHolder.jpg"}
-                alt="Doctor Avatar"
-              />
-              <input type="file" onChange={handleAvatar} />
-            </div>
+            <img
+              src={docAvatarPreview ? docAvatarPreview : "/docHolder.jpg"}
+              alt="Doctor Avatar"
+            />
+            <input type="file" onChange={handleAvatar} />
+          </div>
 
-            <div>
-              <input
-                type="text"
-                placeholder="First Name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Last Name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
-              <input
-                type="text"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <input
-                type="number"
-                placeholder="Mobile Number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-              <input
-                type="number"
-                placeholder="NIC"
-                value={nic}
-                onChange={(e) => setNic(e.target.value)}
-              />
-              <input
-                type="date"
-                value={dob}
-                onChange={(e) => setDob(e.target.value)}
-              />
-              <select
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-              >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <select
-                value={doctorDepartment}
-                onChange={(e) => setDoctorDepartment(e.target.value)}
-              >
-                <option value="">Select Department</option>
-                {departmentsArray.map((depart, index) => (
-                  <option value={depart} key={index}>
-                    {depart}
-                  </option>
-                ))}
-              </select>
+          <div className="form-fields">
+            <input
+              type="text"
+              placeholder="First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="Mobile Number"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+            <input
+              type="number"
+              placeholder="NIC"
+              value={nic}
+              onChange={(e) => setNic(e.target.value)}
+            />
+            <input
+              type="date"
+              value={dob}
+              onChange={(e) => setDob(e.target.value)}
+            />
 
-              <button type="submit">Register New Doctor</button>
-            </div>
+            <select value={gender} onChange={(e) => setGender(e.target.value)}>
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <select
+              value={doctorDepartment}
+              onChange={(e) => setDoctorDepartment(e.target.value)}
+            >
+              <option value="">Select Department</option>
+              {departmentsArray.map((depart, index) => (
+                <option value={depart} key={index}>
+                  {depart}
+                </option>
+              ))}
+            </select>
+
+            <button type="submit">Register New Doctor</button>
           </div>
         </form>
       </section>
