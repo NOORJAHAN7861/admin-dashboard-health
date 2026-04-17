@@ -8,134 +8,149 @@ import { AiFillCloseCircle } from "react-icons/ai";
 
 const Dashboard = () => {
   const [appointments, setAppointments] = useState([]);
+  const { isAuthenticated, admin } = useContext(Context);
 
-useEffect(() => {
-  const fetchAppointments = async () => {
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const { data } = await api.get("/api/v1/appointment/getall");
+        setAppointments(data.appointments);
+      } catch (error) {
+        setAppointments([]);
+      }
+    };
+
+    fetchAppointments();
+  }, []);
+
+  const handleUpdateStatus = async (appointmentId, status) => {
     try {
-      const { data } = await api.get("/api/v1/appointment/getall");
-      setAppointments(data.appointments);
+      const { data } = await api.put(
+        `/api/v1/appointment/update/${appointmentId}`,
+        { status }
+      );
+
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment._id === appointmentId
+            ? { ...appointment, status }
+            : appointment
+        )
+      );
+
+      toast.success(data.message);
     } catch (error) {
-      setAppointments([]);
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 
-  fetchAppointments();
-}, []);
-
-  const handleUpdateStatus = async (appointmentId, status) => {
-   try {
-  const { data } = await api.put(
-    `/api/v1/appointment/update/${appointmentId}`,
-    { status }
-  );
-
-  setAppointments((prevAppointments) =>
-    prevAppointments.map((appointment) =>
-      appointment._id === appointmentId
-        ? { ...appointment, status }
-        : appointment
-    )
-  );
-
-  toast.success(data.message);
-} catch (error) {
-  toast.error(error.response?.data?.message || "Something went wrong");
-}
-  };
-
-  const { isAuthenticated, admin } = useContext(Context);
   if (!isAuthenticated) {
     return <Navigate to={"/login"} />;
   }
 
   return (
-    <>
-      <section className="dashboard page">
-        <div className="banner">
-          <div className="firstBox">
-            <img src="/doc.png" alt="docImg" />
-            <div className="content">
-              <div>
-                <p>Hello ,</p>
-                <h5>
-                  {admin &&
-                    `${admin.firstName} ${admin.lastName}`}{" "}
-                </h5>
-              </div>
-              <p>
-                Welcome to your dashboard! Here you can manage appointments,
-                view patient messages, and oversee doctor registrations. Stay
-                organized and efficient with our user-friendly interface.
-              </p>
+    <section className="dashboard page">
+      <div className="banner">
+        <div className="firstBox">
+          <img src="/doc.png" alt="docImg" />
+          <div className="content">
+            <div>
+              <p>Hello ,</p>
+              <h5>
+                {admin ? `${admin.firstName} ${admin.lastName}` : "Admin"}
+              </h5>
             </div>
-          </div>
-          <div className="secondBox">
-            <p>Total Appointments</p>
-            <h3>1500</h3>
-          </div>
-          <div className="thirdBox">
-            <p>Registered Doctors</p>
-            <h3>10</h3>
+            <p>
+              Welcome to your dashboard! Here you can manage appointments,
+              view patient messages, and oversee doctor registrations. Stay
+              organized and efficient with our user-friendly interface.
+            </p>
           </div>
         </div>
-        <div className="banner">
-          <h5>Appointments</h5>
-          <table>
-            <thead>
-              <tr>
-                <th>Patient</th>
-                <th>Date</th>
-                <th>Doctor</th>
-                <th>Department</th>
-                <th>Status</th>
-                <th>Visited</th>
-              </tr>
-            </thead>
-            <tbody>
-              {appointments && appointments.length > 0
-                ? appointments.map((appointment) => (
-                    <tr key={appointment._id}>
-                      <td>{`${appointment.firstName} ${appointment.lastName}`}</td>
-                      <td>{appointment.appointment_date.substring(0, 16)}</td>
-                      <td>{`${appointment.doctor.firstName} ${appointment.doctor.lastName}`}</td>
-                      <td>{appointment.department}</td>
-                      <td>
-                        <select
-                          className={
-                            appointment.status === "Pending"
-                              ? "value-pending"
-                              : appointment.status === "Accepted"
-                              ? "value-accepted"
-                              : "value-rejected"
-                          }
-                          value={appointment.status}
-                          onChange={(e) =>
-                            handleUpdateStatus(appointment._id, e.target.value)
-                          }
-                        >
-                          <option value="Pending" className="value-pending">
-                            Pending
-                          </option>
-                          <option value="Accepted" className="value-accepted">
-                            Accepted
-                          </option>
-                          <option value="Rejected" className="value-rejected">
-                            Rejected
-                          </option>
-                        </select>
-                      </td>
-                      <td>{appointment.hasVisited === true ? <GoCheckCircleFill className="green"/> : <AiFillCloseCircle className="red"/>}</td>
-                    </tr>
-                  ))
-                : "No Appointments Found!"}
-            </tbody>
-          </table>
+        <div className="secondBox">
+          <p>Total Appointments</p>
+          <h3>1500</h3>
+        </div>
+        <div className="thirdBox">
+          <p>Registered Doctors</p>
+          <h3>10</h3>
+        </div>
+      </div>
 
-          {}
-        </div>
-      </section>
-    </>
+      <div className="banner">
+        <h5>Appointments</h5>
+        <table>
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Date</th>
+              <th>Doctor</th>
+              <th>Department</th>
+              <th>Status</th>
+              <th>Visited</th>
+            </tr>
+          </thead>
+          <tbody>
+            {appointments && appointments.length > 0 ? (
+              appointments.map((appointment) => (
+                <tr key={appointment._id}>
+                  <td>{`${appointment.firstName} ${appointment.lastName}`}</td>
+                  <td>
+                    {appointment.appointment_date
+                      ? appointment.appointment_date.substring(0, 16)
+                      : "N/A"}
+                  </td>
+                  <td>
+                    {appointment.doctor
+                      ? `${appointment.doctor.firstName} ${appointment.doctor.lastName}`
+                      : "N/A"}
+                  </td>
+                  <td>{appointment.department || "N/A"}</td>
+                  <td>
+                    <select
+                      className={
+                        appointment.status === "Pending"
+                          ? "value-pending"
+                          : appointment.status === "Accepted"
+                          ? "value-accepted"
+                          : "value-rejected"
+                      }
+                      value={appointment.status}
+                      onChange={(e) =>
+                        handleUpdateStatus(appointment._id, e.target.value)
+                      }
+                    >
+                      <option value="Pending" className="value-pending">
+                        Pending
+                      </option>
+                      <option value="Accepted" className="value-accepted">
+                        Accepted
+                      </option>
+                      <option value="Rejected" className="value-rejected">
+                        Rejected
+                      </option>
+                    </select>
+                  </td>
+                  <td>
+                    {appointment.hasVisited ? (
+                      <GoCheckCircleFill className="green" />
+                    ) : (
+                      <AiFillCloseCircle className="red" />
+                    )}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="6">No Appointments Found!</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </section>
   );
 };
 
 export default Dashboard;
+
