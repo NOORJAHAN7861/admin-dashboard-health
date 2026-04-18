@@ -85,28 +85,32 @@ const AddNewDoctor = () => {
   if (!isAuthenticated) {
     return <Navigate to={"/login"} />;
   }
+ return (
+  <section className="page">
+    <section className="container add-doctor-form">
+      <img src="/logo.png" alt="logo" className="logo" />
+      <h1 className="form-title">REGISTER A NEW DOCTOR</h1>
 
-  return (
-    <section className="page">
-      <section className="container add-doctor-form">
-        <img src="/logo.png" alt="logo" className="logo" />
-        <h1 className="form-title">REGISTER A NEW DOCTOR</h1>
+      <form onSubmit={handleAddNewDoctor} encType="multipart/form-data">
+        <div className="form-layout">
+          
+          {/* LEFT — Avatar Upload */}
+          <div className="avatar-wrapper">
+            <img
+              src={docAvatarPreview ? docAvatarPreview : "/docHolder.jpg"}
+              alt="Doctor Avatar"
+              className="avatar-preview"
+            />
 
-        <form onSubmit={handleAddNewDoctor} encType="multipart/form-data">
-          <div className="first-wrapper">
-  <img
-    src={docAvatarPreview ? docAvatarPreview : "/docHolder.jpg"}
-    alt="Doctor Avatar"
-  />
+            <input
+              type="file"
+              name="docAvatar"
+              accept="image/png, image/jpeg, image/webp"
+              onChange={handleAvatar}
+            />
+          </div>
 
-  <input
-    type="file"
-    name="docAvatar"                 // ✅ must match backend
-    accept="image/png, image/jpeg, image/webp"
-    onChange={handleAvatar}
-  />
-</div>
-
+          {/* RIGHT — Form Fields */}
           <div className="form-fields">
             <input
               type="text"
@@ -121,19 +125,19 @@ const AddNewDoctor = () => {
               onChange={(e) => setLastName(e.target.value)}
             />
             <input
-              type="text"
+              type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <input
-              type="number"
+              type="text"
               placeholder="Mobile Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
             <input
-              type="number"
+              type="text"
               placeholder="NIC"
               value={nic}
               onChange={(e) => setNic(e.target.value)}
@@ -171,10 +175,11 @@ const AddNewDoctor = () => {
 
             <button type="submit">Register New Doctor</button>
           </div>
-        </form>
-      </section>
+        </div>
+      </form>
     </section>
-  );
+  </section>
+);
 };
 
 export default AddNewDoctor;
