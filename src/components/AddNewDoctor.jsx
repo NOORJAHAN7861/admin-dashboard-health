@@ -92,14 +92,20 @@ const AddNewDoctor = () => {
         <img src="/logo.png" alt="logo" className="logo" />
         <h1 className="form-title">REGISTER A NEW DOCTOR</h1>
 
-        <form onSubmit={handleAddNewDoctor}>
+        <form onSubmit={handleAddNewDoctor} encType="multipart/form-data">
           <div className="first-wrapper">
-            <img
-              src={docAvatarPreview ? docAvatarPreview : "/docHolder.jpg"}
-              alt="Doctor Avatar"
-            />
-            <input type="file" onChange={handleAvatar} />
-          </div>
+  <img
+    src={docAvatarPreview ? docAvatarPreview : "/docHolder.jpg"}
+    alt="Doctor Avatar"
+  />
+
+  <input
+    type="file"
+    name="docAvatar"                 // ✅ must match backend
+    accept="image/png, image/jpeg, image/webp"
+    onChange={handleAvatar}
+  />
+</div>
 
           <div className="form-fields">
             <input
