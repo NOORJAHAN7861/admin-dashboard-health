@@ -7,6 +7,7 @@ import { api } from "../utils/api";
 const AddNewAdmin = () => {
   const { isAuthenticated, setIsAuthenticated } = useContext(Context);
 
+  // ✅ All states
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -15,11 +16,14 @@ const AddNewAdmin = () => {
   const [dob, setDob] = useState("");
   const [gender, setGender] = useState("");
   const [password, setPassword] = useState("");
+  const [formError, setFormError] = useState("");
 
   const navigateTo = useNavigate();
 
   const handleAddNewAdmin = async (e) => {
     e.preventDefault();
+    setFormError("");
+
     try {
       const res = await api.post("/api/v1/user/admin/addnew", {
         firstName,
@@ -36,7 +40,7 @@ const AddNewAdmin = () => {
       setIsAuthenticated(true);
       navigateTo("/");
 
-      // Reset form
+      // ✅ Reset form
       setFirstName("");
       setLastName("");
       setEmail("");
@@ -46,12 +50,14 @@ const AddNewAdmin = () => {
       setGender("");
       setPassword("");
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      const msg = error?.response?.data?.message || "Something went wrong";
+      setFormError(msg);
+      toast.error(msg);
     }
   };
 
   if (!isAuthenticated) {
-    return <Navigate to={"/login"} />;
+    return <Navigate to="/login" />;
   }
 
   return (
@@ -59,6 +65,7 @@ const AddNewAdmin = () => {
       <section className="container form-component add-admin-form">
         <img src="/logo.png" alt="logo" className="logo" />
         <h1 className="form-title">ADD NEW ADMIN</h1>
+
         <form onSubmit={handleAddNewAdmin}>
           <div>
             <input
@@ -66,55 +73,77 @@ const AddNewAdmin = () => {
               placeholder="First Name"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
+              required
             />
             <input
               type="text"
               placeholder="Last Name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
+              required
             />
           </div>
+
           <div>
             <input
-              type="text"
+              type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
             <input
-              type="number"
+              type="text"
               placeholder="Mobile Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+              required
             />
           </div>
+
           <div>
             <input
-              type="number"
+              type="text"
               placeholder="NIC"
               value={nic}
               onChange={(e) => setNic(e.target.value)}
+              required
             />
             <input
               type="date"
-              placeholder="Date of Birth"
               value={dob}
               onChange={(e) => setDob(e.target.value)}
+              required
             />
           </div>
+
           <div>
-            <select value={gender} onChange={(e) => setGender(e.target.value)}>
+            <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              required
+            >
               <option value="">Select Gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
+
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
+
+          {/* ✅ Backend role error shown here */}
+          {formError && (
+            <p style={{ color: "red", textAlign: "center", margin: "10px 0" }}>
+              {formError}
+            </p>
+          )}
+
           <div style={{ justifyContent: "center", alignItems: "center" }}>
             <button type="submit">ADD NEW ADMIN</button>
           </div>
