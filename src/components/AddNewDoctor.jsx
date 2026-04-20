@@ -5,7 +5,7 @@ import { Context } from "../main";
 import { api } from "../utils/api";
 
 const AddNewDoctor = () => {
-  const { isAuthenticated, setIsAuthenticated } = useContext(Context);
+  const { isAuthenticated } = useContext(Context);
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -16,8 +16,6 @@ const AddNewDoctor = () => {
   const [gender, setGender] = useState("");
   const [password, setPassword] = useState("");
   const [doctorDepartment, setDoctorDepartment] = useState("");
-  const [docAvatar, setDocAvatar] = useState(null);
-  const [docAvatarPreview, setDocAvatarPreview] = useState("");
 
   const navigateTo = useNavigate();
 
@@ -33,39 +31,29 @@ const AddNewDoctor = () => {
     "ENT",
   ];
 
-  const handleAvatar = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    setDocAvatar(file);
-    setDocAvatarPreview(URL.createObjectURL(file));
-  };
-
   const handleAddNewDoctor = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("firstName", firstName);
-    formData.append("lastName", lastName);
-    formData.append("email", email);
-    formData.append("phone", phone);
-    formData.append("password", password);
-    formData.append("nic", nic);
-    formData.append("dob", dob);
-    formData.append("gender", gender);
-    formData.append("doctorDepartment", doctorDepartment);
-    formData.append("docAvatar", docAvatar);
-
     try {
-      const res = await api.post("/api/v1/user/doctor/addnew", formData, {
-        withCredentials: true,
-      });
+      const { data } = await api.post(
+        "/api/v1/user/doctor/addnew",
+        {
+          firstName,
+          lastName,
+          email,
+          phone,
+          nic,
+          dob,
+          gender,
+          password,
+          doctorDepartment,
+        },
+        { withCredentials: true }
+      );
 
-      toast.success(res.data.message);
-      setIsAuthenticated(true);
+      toast.success(data.message);
       navigateTo("/");
 
-      // Reset form
       setFirstName("");
       setLastName("");
       setEmail("");
@@ -75,42 +63,22 @@ const AddNewDoctor = () => {
       setGender("");
       setPassword("");
       setDoctorDepartment("");
-      setDocAvatar(null);
-      setDocAvatarPreview("");
     } catch (error) {
       toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 
   if (!isAuthenticated) {
-    return <Navigate to={"/login"} />;
+    return <Navigate to="/login" />;
   }
- return (
-  <section className="page">
-    <section className="container add-doctor-form">
-      <img src="/logo.png" alt="logo" className="logo" />
-      <h1 className="form-title">REGISTER A NEW DOCTOR</h1>
 
-      <form onSubmit={handleAddNewDoctor} encType="multipart/form-data">
-        <div className="form-layout">
-          
-          {/* LEFT — Avatar Upload */}
-          <div className="avatar-wrapper">
-            <img
-              src={docAvatarPreview ? docAvatarPreview : "/docHolder.jpg"}
-              alt="Doctor Avatar"
-              className="avatar-preview"
-            />
+  return (
+    <section className="page">
+      <section className="container add-doctor-form">
+        <img src="/logo.png" alt="logo" className="logo" />
+        <h1 className="form-title">REGISTER A NEW DOCTOR</h1>
 
-            <input
-              type="file"
-              name="docAvatar"
-              accept="image/png, image/jpeg, image/webp"
-              onChange={handleAvatar}
-            />
-          </div>
-
-          {/* RIGHT — Form Fields */}
+        <form onSubmit={handleAddNewDoctor}>
           <div className="form-fields">
             <input
               type="text"
@@ -118,30 +86,35 @@ const AddNewDoctor = () => {
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
+
             <input
               type="text"
               placeholder="Last Name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
+
             <input
               type="email"
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
+
             <input
               type="text"
               placeholder="Mobile Number"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
+
             <input
               type="text"
               placeholder="NIC"
               value={nic}
               onChange={(e) => setNic(e.target.value)}
             />
+
             <input
               type="date"
               value={dob}
@@ -175,11 +148,10 @@ const AddNewDoctor = () => {
 
             <button type="submit">Register New Doctor</button>
           </div>
-        </div>
-      </form>
+        </form>
+      </section>
     </section>
-  </section>
-);
+  );
 };
 
 export default AddNewDoctor;

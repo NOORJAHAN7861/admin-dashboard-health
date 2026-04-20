@@ -5,9 +5,8 @@ import { toast } from "react-toastify";
 import { api } from "../utils/api";
 
 const AddNewAdmin = () => {
-  const { isAuthenticated, setIsAuthenticated } = useContext(Context);
+  const { isAuthenticated, user } = useContext(Context);
 
-  // ✅ All states
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -18,29 +17,32 @@ const AddNewAdmin = () => {
   const [password, setPassword] = useState("");
   const [formError, setFormError] = useState("");
 
-  const navigateTo = useNavigate();
+  const navigate = useNavigate();
 
   const handleAddNewAdmin = async (e) => {
     e.preventDefault();
     setFormError("");
 
     try {
-      const res = await api.post("/api/v1/user/admin/addnew", {
-        firstName,
-        lastName,
-        email,
-        phone,
-        nic,
-        dob,
-        gender,
-        password,
-      });
+      const res = await api.post(
+        "/api/v1/user/admin/addnew",
+        {
+          firstName,
+          lastName,
+          email,
+          phone,
+          nic,
+          dob,
+          gender,
+          password,
+        },
+        { withCredentials: true }
+      );
 
       toast.success(res.data.message);
-      setIsAuthenticated(true);
-      navigateTo("/");
+      navigate("/");
 
-      // ✅ Reset form
+      // reset
       setFirstName("");
       setLastName("");
       setEmail("");
@@ -56,7 +58,8 @@ const AddNewAdmin = () => {
     }
   };
 
-  if (!isAuthenticated) {
+  // ✅ Only Admin can access
+  if (!isAuthenticated || user?.role !== "Admin") {
     return <Navigate to="/login" />;
   }
 
@@ -137,14 +140,11 @@ const AddNewAdmin = () => {
             />
           </div>
 
-          {/* ✅ Backend role error shown here */}
           {formError && (
-            <p style={{ color: "red", textAlign: "center", margin: "10px 0" }}>
-              {formError}
-            </p>
+            <p style={{ color: "red", textAlign: "center" }}>{formError}</p>
           )}
 
-          <div style={{ justifyContent: "center", alignItems: "center" }}>
+          <div style={{ justifyContent: "center" }}>
             <button type="submit">ADD NEW ADMIN</button>
           </div>
         </form>

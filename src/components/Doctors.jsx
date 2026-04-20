@@ -32,10 +32,7 @@ const Doctors = () => {
         {doctors && doctors.length > 0 ? (
           doctors.map((element) => (
             <div className="card" key={element._id}>
-              <img
-                src={element.docAvatar?.url || "/docHolder.jpg"}
-                alt="doctor avatar"
-              />
+             
               <h4>{`${element.firstName} ${element.lastName}`}</h4>
               <div className="details">
                 <p>
