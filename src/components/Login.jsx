@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Context } from "../main";
 import { api } from "../utils/api";
@@ -13,10 +13,17 @@ const AdminLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await api.post("/api/v1/user/login", { email, password }, { withCredentials: true });
+      const { data } = await api.post(
+        "/api/v1/user/login",
+        { email, password },
+        { withCredentials: true }
+      );
 
+      // ✅ Only allow Admins
       if (data.user.role !== "Admin") {
         toast.error("Unauthorized: Only admins can log in here");
+        localStorage.removeItem("isAuth");
+        localStorage.removeItem("user");
         return;
       }
 
@@ -37,10 +44,28 @@ const AdminLogin = () => {
     <section className="container form-component">
       <h1 className="form-title">Admin Login</h1>
       <form onSubmit={handleLogin}>
-        <input type="email" placeholder="Admin Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <input
+          type="email"
+          placeholder="Admin Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
         <button type="submit">Login</button>
       </form>
+
+      <p>
+        Not registered yet? <Link to="/register">Sign Up</Link>
+      </p>
     </section>
   );
 };
